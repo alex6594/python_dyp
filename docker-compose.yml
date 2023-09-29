@@ -1,0 +1,45 @@
+version: "3.9"
+
+networks:
+  lab_compose:
+    driver: bridge
+    ipam:
+      config:
+          - subnet: 172.22.0.0/24
+
+services:
+  db:
+    image: postgres:latest
+    container_name: diplom-db
+    environment:
+      POSTGRES_DB: "hello"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres_passwd"
+      POSTGRES_HOST_AUTH_METHOD: trust
+    networks:
+      lab_compose:
+        ipv4_address: 172.22.0.3
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready - U postgres -d new_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build: .
+    command:  python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    networks:
+      lab_compose:
+        ipv4_address: 172.22.0.4
+    depends_on:
+      - db
+    restart: always
+
