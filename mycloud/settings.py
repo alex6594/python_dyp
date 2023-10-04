@@ -88,14 +88,15 @@ WSGI_APPLICATION = 'mycloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'hello',
-        'HOST': 'localhost',
+        'NAME': 'hi',
+        'HOST': '172.22.0.3',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': 'postgres_passwd',
     }
 }
 
